@@ -30,8 +30,13 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
           body: `App name: ${appName} Code: ${verifyCode}`,
           to: phoneNumber,
       });
-    }catch(err){
-      reply.status(500).send({ error:err });
+    }catch(e){
+      if (typeof e === "string") {
+          reply.status(500).send({ error:e  });
+
+      } else if (e instanceof Error) {
+          reply.status(500).send({ error:e.message  });
+      }
   }
 
       reply.status(200).send({ success:true });
