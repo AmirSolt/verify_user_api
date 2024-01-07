@@ -35,29 +35,23 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
       const {phoneNumber, verifyCode, appName} = request.body
       
-      let message:MessageInstance|undefined
-      try{
-        message = await client.messages.create({
+      const message = await client.messages.create({
           from: process.env.TWILIO_PHONE_NUMBER,
-          body: `App name: ${appName} Code: ${verifyCode}`,
+          body: `${appName? appName+": ": ""}${verifyCode} is your security code.`,
           to: phoneNumber,
       });
-    }catch(e){
-      if (e instanceof Error) {
+      if (message.status === "failed") {
         console.error("==========================")
-        console.error(`ERROR: ${e.message}`)
-        if(message)console.error(`ERROR CODE: ${message.errorCode} ERROR MESSAGE: ${message.errorMessage}`)
+        console.error(`ERROR CODE: ${message.errorCode} ERROR MESSAGE: ${message.errorMessage}`)
         console.error("==========================")
-
-        if(message && message?.errorCode===21401){
-          reply.status(500).send({ error:message.errorMessage });
+        if(message.errorCode===21401){
+          reply.status(400).send({ error:message.errorMessage });
           return
         }else{
           reply.status(500).send({ error:"An Error has occurred. Please let us know."  });
           return
         }
       } 
-  }
 
       reply.status(200).send({ success:true });
     }
