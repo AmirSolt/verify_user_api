@@ -2,7 +2,7 @@
 
 
 POST https://smsverifsender-production.up.railway.app/ HTTP/1.1
-x-rapidapi-proxy-secret:""
+x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {

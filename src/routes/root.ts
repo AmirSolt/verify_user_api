@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { client } from '../lib/twilio'
 import { VerifReq, VerifReqType } from '../lib/validator';
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 
 interface IHeaders{
   'x-rapidapi-proxy-secret':string|undefined;
@@ -33,18 +34,28 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {phoneNumber, verifyCode, appName} = request.body
-  
+      
+      let message:MessageInstance|undefined
       try{
-        await client.messages.create({
+        message = await client.messages.create({
           from: process.env.TWILIO_PHONE_NUMBER,
           body: `App name: ${appName} Code: ${verifyCode}`,
           to: phoneNumber,
       });
     }catch(e){
       if (e instanceof Error) {
-        console.error(`ERROR NAME: ${e.name}  ERROR MESSAGE: ${e.message}`)
-        reply.status(500).send({ error:e.message  });
+        console.error("==========================")
+        console.error(`ERROR: ${e.message}`)
+        if(message)console.error(`ERROR CODE: ${message.errorCode} ERROR MESSAGE: ${message.errorMessage}`)
+        console.error("==========================")
 
+        if(message && message?.errorCode===21401){
+          reply.status(500).send({ error:message.errorMessage });
+          return
+        }else{
+          reply.status(500).send({ error:"An Error has occurred. Please let us know."  });
+          return
+        }
       } 
   }
 
