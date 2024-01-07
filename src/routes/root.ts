@@ -1,7 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { client } from '../lib/twilio'
 import { VerifReq, VerifReqType } from '../lib/validator';
-import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 
 interface IHeaders{
   'x-rapidapi-proxy-secret':string|undefined;
@@ -37,7 +36,7 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       
       const message = await client.messages.create({
           from: process.env.TWILIO_PHONE_NUMBER,
-          body: `${appName? appName+": ": ""}${verifyCode} is your security code.`,
+          body: `${appName? appName+": ": ""}${verifyCode} is your security code. Do not share it with anyone.`,
           to: phoneNumber,
       });
       if (message.status === "failed") {
