@@ -7,7 +7,7 @@ import { Static, Type } from '@sinclair/typebox'
 
 export const VerifReq = Type.Object({
     phoneNumber: Type.String({
-        maxLength:20
+        maxLength:20,
     }),
   verifyCode: Type.String({
     maxLength:12

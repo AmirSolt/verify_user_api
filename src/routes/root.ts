@@ -33,6 +33,15 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {phoneNumber, verifyCode, appName} = request.body
+
+      if(isURL(verifyCode)){
+        reply.status(400).send({ error:`verifyCode is invalid. verifyCode:${verifyCode}`  });
+          return
+      }
+      if(appName && isURL(appName)){
+        reply.status(400).send({error:`appName is invalid. appName:${appName}` });
+          return
+      }
       
       const message = await client.messages.create({
           from: process.env.TWILIO_PHONE_NUMBER,
@@ -57,5 +66,14 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   )
 }
 
+
+function isURL(url:string){
+  try {
+    new URL(url);
+  } catch (_) {
+    return false;  
+  }
+  return true
+}
 
 export default root;

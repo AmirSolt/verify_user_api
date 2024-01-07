@@ -6,7 +6,7 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "phoneNumber": "+164744807443",
+    "phoneNumber": "+16473",
     "verifyCode": "756341",
     "appName": "SMS Sender"
 }
