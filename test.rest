@@ -1,11 +1,12 @@
 
 
 
-POST http://randomidiom-production.up.railway.app/ HTTP/1.1
+POST https://smsverifsender-production.up.railway.app/ HTTP/1.1
+x-rapidapi-proxy-secret:""
 content-type: application/json
 
 {
-    "phoneNumber": "+16475807443",
-    "verifyCode": "756 341",
-    ""
+    "phoneNumber": "+164744807443",
+    "verifyCode": "756341",
+    "appName": "SMS Sender"
 }

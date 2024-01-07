@@ -2,6 +2,9 @@ import { FastifyPluginAsync } from 'fastify'
 import { client } from '../lib/twilio'
 import { VerifReq, VerifReqType } from '../lib/validator';
 
+interface IHeaders{
+  'x-rapidapi-proxy-secret':string|undefined;
+}
 
 interface IReply {
   200: {success:boolean};
@@ -13,7 +16,7 @@ interface IReply {
 
 const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
-  fastify.post<{ Body:VerifReqType, Reply:IReply }>(
+  fastify.post<{ Headers:IHeaders, Body:VerifReqType, Reply:IReply }>(
     '/',
     {
       schema: {
@@ -21,6 +24,13 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
     },
     async  (request, reply) => {
+
+      const rapidapiHeader = request.headers['x-rapidapi-proxy-secret']
+      if(rapidapiHeader==null || process.env.RAPIDAPI_SECRET !== rapidapiHeader){
+        reply.status(400).send({error:`Request headers x-rapidapi-proxy-secret is invalid.`})
+        return
+      }
+
 
       const {phoneNumber, verifyCode, appName} = request.body
   
@@ -31,12 +41,11 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
           to: phoneNumber,
       });
     }catch(e){
-      if (typeof e === "string") {
-          reply.status(500).send({ error:e  });
+      if (e instanceof Error) {
+        console.error(`ERROR NAME: ${e.name}  ERROR MESSAGE: ${e.message}`)
+        reply.status(500).send({ error:e.message  });
 
-      } else if (e instanceof Error) {
-          reply.status(500).send({ error:e.message  });
-      }
+      } 
   }
 
       reply.status(200).send({ success:true });
