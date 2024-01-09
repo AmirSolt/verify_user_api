@@ -1,6 +1,11 @@
 import { join } from 'path';
 import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
+import Sensible from '@fastify/sensible'
+import Env from '@fastify/env'
+import Cors from '@fastify/cors'
+import { Type } from '@sinclair/typebox'
+
 
 export type AppOptions = {
   // Place your custom options for app below here.
@@ -10,20 +15,29 @@ const app: FastifyPluginAsync<AppOptions> = async (
     fastify,
     opts
 ): Promise<void> => {
-  // Place here your custom code!
 
-  // Do not touch the following lines
+  await fastify.register(Env, {
+      schema: Type.Object({
+        NODE_ENV: Type.String(),
+        TWILIO_ACCOUNT_SID: Type.String(),
+        TWILIO_AUTH_TOKEN: Type.String(),
+        TWILIO_PHONE_NUMBER: Type.String(),
+        RAPIDAPI_SECRET: Type.String(),
+        EMAIL_CF_WORKER_API_KEY: Type.String(),
+    })
+  })
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
+  await fastify.register(Sensible)
+
+  await fastify.register(Cors, {
+    origin: false
+  })
+
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'plugins'),
     options: opts
   })
 
-  // This loads all plugins defined in routes
-  // define your routes in one of these
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
     options: opts

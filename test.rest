@@ -4,9 +4,22 @@
 POST https://smsverifsender-production.up.railway.app/ HTTP/1.1
 x-rapidapi-proxy-secret:asd
 content-type: application/json
-
 {
     "phoneNumber": "+16473",
     "verifyCode": "756341",
     "appName": "SMS Sender"
+}
+
+
+
+
+POST https://email-sender.killop1997.workers.dev/ HTTP/1.1
+content-type: application/json
+{
+"apiKey":"c92ec923-6fc3-4f30-a546-c0aead27068c",
+"toEmail":"killop1997@gmail.com",
+"toName":"User",
+"fromName":"App Name",
+"subject":"Greate subject dude!",
+"contentHTML":"This is the link I told you about https://super-apis.com"
 }
