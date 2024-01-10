@@ -4,6 +4,18 @@ import TwilioSDK from 'twilio';
 import { isURL } from '../lib/helper';
 
 
+
+
+declare module 'fastify' {
+  export interface FastifyInstance {
+    sms : {
+      getContent: (verifyCode:string, appName:string)=>string
+      send: (phoneNumber:string, content:string)=>Promise<void>
+    }
+  }
+}
+
+
 const sms:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
     const client = new TwilioSDK.Twilio(fastify.config.TWILIO_ACCOUNT_SID, fastify.config.TWILIO_AUTH_TOKEN);
 

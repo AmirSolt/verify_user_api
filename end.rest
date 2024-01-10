@@ -1,9 +1,34 @@
 
+POST http://127.0.0.1:3000/send-sms-code HTTP/1.1
+x-rapidapi-proxy-secret:asd
+content-type: application/json
 
+{
+    "phoneNumber": "6475807443",
+    "verifyCode": "756341",
+    "appName": "Peeqq"
+}
+
+
+###
+
+
+POST http://127.0.0.1:3000/send-email-code HTTP/1.1
+x-rapidapi-proxy-secret:asd
+content-type: application/json
+
+{
+    "toEmail": "killop1997@gmail.com",
+    "verifyCode": "756341",
+    "appName": "Peeqq"
+}
+
+###
 
 POST https://smsverifsender-production.up.railway.app/ HTTP/1.1
 x-rapidapi-proxy-secret:asd
 content-type: application/json
+
 {
     "phoneNumber": "+16473",
     "verifyCode": "756341",
@@ -11,10 +36,11 @@ content-type: application/json
 }
 
 
-
+###
 
 POST https://email-sender.killop1997.workers.dev/ HTTP/1.1
 content-type: application/json
+
 {
 "apiKey":"c92ec923-6fc3-4f30-a546-c0aead27068c",
 "toEmail":"killop1997@gmail.com",

@@ -4,7 +4,25 @@ import { FastifyPluginAsync } from 'fastify';
 import Sensible from '@fastify/sensible'
 import Env from '@fastify/env'
 import Cors from '@fastify/cors'
-import { Type } from '@sinclair/typebox'
+import { Static, Type } from '@sinclair/typebox'
+
+
+const Envs = Type.Object({
+  NODE_ENV: Type.String(),
+  TWILIO_ACCOUNT_SID: Type.String(),
+  TWILIO_AUTH_TOKEN: Type.String(),
+  TWILIO_PHONE_NUMBER: Type.String(),
+  RAPIDAPI_SECRET: Type.String(),
+  EMAIL_CF_WORKER_API_KEY: Type.String(),
+})
+type EnvsType = Static<typeof Envs>
+
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    config: EnvsType
+  }
+}
 
 
 export type AppOptions = {
@@ -17,14 +35,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
 ): Promise<void> => {
 
   await fastify.register(Env, {
-      schema: Type.Object({
-        NODE_ENV: Type.String(),
-        TWILIO_ACCOUNT_SID: Type.String(),
-        TWILIO_AUTH_TOKEN: Type.String(),
-        TWILIO_PHONE_NUMBER: Type.String(),
-        RAPIDAPI_SECRET: Type.String(),
-        EMAIL_CF_WORKER_API_KEY: Type.String(),
-    })
+      schema: Envs
   })
 
   await fastify.register(Sensible)

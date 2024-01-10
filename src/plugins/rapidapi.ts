@@ -2,6 +2,16 @@ import fp from 'fastify-plugin'
 import { FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
 
 
+declare module 'fastify' {
+    export interface FastifyInstance {
+        rapidapi : {
+            verifySecret: (headersRapidapiSecret:string)=>Promise<void>
+      }
+    }
+  }
+  
+
+
 const rapidapi:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
 
     fastify.decorate("rapidapi", {
