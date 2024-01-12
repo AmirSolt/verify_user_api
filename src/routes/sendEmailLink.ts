@@ -7,12 +7,15 @@ const Headers = Type.Object({
 })
 
 const Body = Type.Object({
-    toEmail: Type.String({
+    to_email: Type.String({
         maxLength:60,
     }),
-    appName: Type.String({
+    app_name: Type.String({
       maxLength:60
     }),
+    webhook_url: Type.String(),
+    webhook_secret_key: Type.String(),
+    success_redirect_url: Type.Optional(Type.String())
 })
 
 type HeadersType = Static<typeof Headers>
@@ -44,10 +47,10 @@ const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.rapidapi.verifySecret(rapidapiHeader)
 
 
-      const {toEmail, appName} = request.body
-      const verifToken = await fastify.verificationManager.saveVerificationToken(null, toEmail)
-      const content = fastify.contentManager.getEmailLinkContent(verifToken.verifLink, appName)
-      await fastify.email.send(toEmail, "User", `${appName} - verification service`, `${appName} Account Verification Link`, content)
+      const {to_email, app_name, webhook_url, webhook_secret_key, success_redirect_url} = request.body
+      const verifToken = await fastify.verificationManager.saveVerificationToken(null, to_email, webhook_url, webhook_secret_key, success_redirect_url??null)
+      const content = fastify.contentManager.getEmailLinkContent(verifToken.verifLink, app_name)
+      await fastify.email.send(to_email, "User", `${app_name} - verification service`, `${app_name} Account Verification Link`, content)
 
 
       reply.status(200).send({ success:true });

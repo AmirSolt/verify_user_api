@@ -30,7 +30,24 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         return reply.sendFile("fail.html")
       }
 
-    // send webhook
+
+      fetch(verificationToken.webhook_url, {
+          method:"POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id:verificationToken.id,
+            user_email:verificationToken.email,
+            user_phone_number:verificationToken.to_phone_number,
+            webhook_secret_key:verificationToken.webhook_secret_key
+          })
+        })
+    
+    if(verificationToken.success_redirect_url){
+      return reply.redirect(verificationToken.success_redirect_url)
+    }
 
 
     return reply.sendFile("success.html")

@@ -7,10 +7,10 @@ import { isURL } from '../lib/helper';
 declare module 'fastify' {
     export interface FastifyInstance {
         contentManager : {
-            getEmailCodeContent: (verifyCode:string, appName:string)=>string
-            getEmailLinkContent: (verifLink:string, appName:string)=>string
-            getSMSCodeContent: (verifyCode:string, appName:string)=>string
-            getSMSLinkContent: (verifLink:string, appName:string)=>string
+            getEmailCodeContent: (verify_code:string, app_name:string)=>string
+            getEmailLinkContent: (verifLink:string, app_name:string)=>string
+            getSMSCodeContent: (verify_code:string, app_name:string)=>string
+            getSMSLinkContent: (verifLink:string, app_name:string)=>string
       }
     }
   }
@@ -26,37 +26,57 @@ const contentManager:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, 
     })
 
 
-    function getEmailCodeContent(verifyCode:string, appName:string):string{
-        if(isURL(verifyCode)){
-            throw fastify.httpErrors.badRequest(`verifyCode is invalid. verifyCode:${verifyCode}`)
+    function getEmailCodeContent(verify_code:string, app_name:string):string{
+        if(isURL(verify_code)){
+            throw fastify.httpErrors.badRequest(`verify_code is invalid. verify_code:${verify_code}`)
         }
-        if(appName && isURL(appName)){
-          throw fastify.httpErrors.badRequest(`appName is invalid. appName:${appName}`)
+        if(app_name && isURL(app_name)){
+          throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
         }
-        return emailHTMLTemplate(verifyCode, appName)
+        return emailHTMLTemplate(verify_code, null, app_name)
     }
 
-    function getSMSCodeContent(verifyCode:string, appName:string):string{
-        if(isURL(verifyCode)){
-            throw fastify.httpErrors.badRequest(`verifyCode is invalid. verifyCode:${verifyCode}`)
+    function getSMSCodeContent(verify_code:string, app_name:string):string{
+        if(isURL(verify_code)){
+            throw fastify.httpErrors.badRequest(`verify_code is invalid. verify_code:${verify_code}`)
         }
-        if(appName && isURL(appName)){
-          throw fastify.httpErrors.badRequest(`appName is invalid. appName:${appName}`)
+        if(app_name && isURL(app_name)){
+          throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
         }
-        return `${appName}: ${verifyCode} is your security code. Do not share it with anyone.`
+        return `${app_name}: ${verify_code} is your security code. Do not share it with anyone.`
    }
    
-   function getSMSLinkContent(verifLink:string, appName:string):string{
-      return ""
+   function getSMSLinkContent(verifLink:string, app_name:string):string{
+      if(app_name && isURL(app_name)){
+         throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
+       }
+       return `${app_name}: To verify your phone number click the link below. If you were not expecting this verification, please ignore.\n ${verifLink}`
    }
-   function getEmailLinkContent(verifLink:string, appName:string):string{
-      return ""
+   function getEmailLinkContent(verifLink:string, app_name:string):string{
+      if(app_name && isURL(app_name)){
+         throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
+       }
+      return emailHTMLTemplate(null, verifLink, app_name)
+
    }
 
 }
 
 
-const emailHTMLTemplate = (verifyCode:string, appName:string)=>`
+const emailHTMLTemplate = (verify_code:string|null, verify_link:string|null, app_name:string)=>{
+   
+   const verifyCodeHTML = `<td style="padding:30px;font-size:50px;letter-spacing:0.3em;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525;text-align:center">${verify_code}</td>`
+   
+   const verifyLinkHTML = `<td class=”button” bgcolor="#50C878">
+   <a  class=”link” href="${verify_link}" target="_blank">
+       Verify Email
+   </a>
+   </td>`
+
+   let verifyHTML = verifyCodeHTML? verifyCodeHTML : verifyLinkHTML
+
+
+   return `
 <div class="">
     <div class="aHl"></div>
     <div id=":pa" tabindex="-1"></div>
@@ -70,16 +90,16 @@ const emailHTMLTemplate = (verifyCode:string, appName:string)=>`
                       <td style="padding:20px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525">Hi,</td>
                    </tr>
                    <tr>
-                      <td style="padding:30px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;line-height:19px;color:#252525;text-align:center">Your ${appName} account verification code is:</td>
+                      <td style="padding:30px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;line-height:19px;color:#252525;text-align:center">Your ${app_name} email verification: </td>
                    </tr>
                    <tr>
-                      <td style="padding:30px;font-size:50px;letter-spacing:0.3em;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525;text-align:center">${verifyCode}</td>
+                     ${verifyHTML}
                    </tr>
                    <tr>
                       <td style="padding:30px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;line-height:19px;color:#252525;text-align:center">
                          Don’t share the code with anyone.
                          <br><br>
-                         If it wasn’t you who request the code, someone may be trying to access your account. You can change your password to secure your account.
+                         If you did not request verification, someone may be trying to access your account. You can change your password to secure your account.
                       </td>
                    </tr>
                 </tbody>
@@ -96,6 +116,8 @@ const emailHTMLTemplate = (verifyCode:string, appName:string)=>`
     <div class="WhmR8e" data-hash="0"></div>
  </div>
 `
+
+}
 
 export default fp(contentManager, {
   name: 'contentManager'

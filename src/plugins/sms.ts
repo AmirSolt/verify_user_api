@@ -8,7 +8,7 @@ import TwilioSDK from 'twilio';
 declare module 'fastify' {
   export interface FastifyInstance {
     sms : {
-      send: (phoneNumber:string, content:string)=>Promise<void>
+      send: (to_phone_number:string, content:string)=>Promise<void>
     }
   }
 }
@@ -23,11 +23,11 @@ const sms:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
 
 
     
-    async function send(phoneNumber:string, content:string){
+    async function send(to_phone_number:string, content:string){
         const message = await client.messages.create({
             from: fastify.config.TWILIO_PHONE_NUMBER,
             body: content,
-            to: phoneNumber,
+            to: to_phone_number,
         });
         if (message.status === "failed") {
           console.error("==========================")

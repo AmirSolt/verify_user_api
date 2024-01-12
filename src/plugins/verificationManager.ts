@@ -1,19 +1,22 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
-import {v4 as uuidv4} from 'uuid';  
+import {randomUUID} from 'crypto';  
 
 interface VerificationToken{
     id:string
-    phoneNumber:string|null
+    to_phone_number:string|null
     email:string|null
     verifLink:string
+    webhook_url: string
+    webhook_secret_key: string
+    success_redirect_url: string|null
 }
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
         verificationManager : {
-            saveVerificationToken: (phoneNumber:string|null, email:string|null)=>Promise<VerificationToken>
+            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string, webhook_secret_key:string, success_redirect_url:string|null)=>Promise<VerificationToken>
             fetchVerificationToken: (id:string)=>Promise<VerificationToken|null>
       }
     }
@@ -28,12 +31,15 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
     })
 
 
-    async function saveVerificationToken(phoneNumber:string|null, email:string|null){
-      const randomId = uuidv4()
+    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string, webhook_secret_key:string, success_redirect_url:string|null){
+      const randomId = randomUUID()
       const verificationToken:VerificationToken = {
           id:randomId,
-          phoneNumber:phoneNumber,
+          to_phone_number:to_phone_number,
           email:email,
+          webhook_url:webhook_url,
+          webhook_secret_key:webhook_secret_key,
+          success_redirect_url:success_redirect_url,
           verifLink:`${fastify.config.DOMAIN}/verifyLink/${randomId}`,
       }
       await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken)) 

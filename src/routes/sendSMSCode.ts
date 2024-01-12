@@ -7,13 +7,13 @@ const Headers = Type.Object({
 })
 
 const Body = Type.Object({
-    phoneNumber: Type.String({
+    to_phone_number: Type.String({
         maxLength:20,
     }),
-    verifyCode: Type.String({
+    verify_code: Type.String({
       maxLength:12
     }),
-    appName: Type.String({
+    app_name: Type.String({
       maxLength:60
     }),
 })
@@ -47,9 +47,9 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.rapidapi.verifySecret(rapidapiHeader)
 
 
-      const {phoneNumber, verifyCode, appName} = request.body
-      const content = fastify.contentManager.getSMSCodeContent(verifyCode, appName)
-      await fastify.sms.send(phoneNumber, content)
+      const {to_phone_number, verify_code, app_name} = request.body
+      const content = fastify.contentManager.getSMSCodeContent(verify_code, app_name)
+      await fastify.sms.send(to_phone_number, content)
 
 
       reply.status(200).send({ success:true });

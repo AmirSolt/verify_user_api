@@ -4,9 +4,9 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "phoneNumber": "6475807443",
-    "verifyCode": "756341",
-    "appName": "Peeqq"
+    "to_phone_number": "6475807443",
+    "verify_code": "756341",
+    "app_name": "Peeqq"
 }
 
 
@@ -18,9 +18,9 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "toEmail": "killop1997@gmail.com",
-    "verifyCode": "756341",
-    "appName": "Peeqq"
+    "to_email": "killop1997@gmail.com",
+    "verify_code": "756341",
+    "app_name": "Peeqq"
 }
 
 ###
@@ -30,9 +30,9 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "phoneNumber": "+16473",
-    "verifyCode": "756341",
-    "appName": "SMS Sender"
+    "to_phone_number": "+16473",
+    "verify_code": "756341",
+    "app_name": "SMS Sender"
 }
 
 
@@ -43,7 +43,7 @@ content-type: application/json
 
 {
 "apiKey":"c92ec923-6fc3-4f30-a546-c0aead27068c",
-"toEmail":"killop1997@gmail.com",
+"to_email":"killop1997@gmail.com",
 "toName":"User",
 "fromName":"App Name",
 "subject":"Greate subject dude!",

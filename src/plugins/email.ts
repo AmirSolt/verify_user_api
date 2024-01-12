@@ -6,7 +6,7 @@ import { FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
 declare module 'fastify' {
     export interface FastifyInstance {
         email : {
-            send: (toEmail:string, toName:string, fromName:string, subject:string, content:string)=>Promise<void>
+            send: (to_email:string, toName:string, fromName:string, subject:string, content:string)=>Promise<void>
       }
     }
   }
@@ -19,7 +19,7 @@ const email:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
     })
 
     
-    async function send(toEmail:string, toName:string, fromName:string, subject:string, content:string){
+    async function send(to_email:string, toName:string, fromName:string, subject:string, content:string){
         const rawResponse = await fetch("https://email-sender.killop1997.workers.dev/", {
           method:"POST",
           headers: {
@@ -28,7 +28,7 @@ const email:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
           },
           body: JSON.stringify({
             apiKey:fastify.config.EMAIL_CF_WORKER_API_KEY,
-            toEmail:toEmail,
+            to_email:to_email,
             toName:toName,
             fromName:fromName,
             subject:subject,
