@@ -3,13 +3,17 @@ import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
 import Sensible from '@fastify/sensible'
 import Env from '@fastify/env'
+import fastifyStatic from '@fastify/static'
 import Cors from '@fastify/cors'
+import path from 'path';
 import { Static, Type } from '@sinclair/typebox'
 
 
 const Envs = Type.Object({
   NODE_ENV: Type.String(),
+  DOMAIN: Type.String(),
   TWILIO_ACCOUNT_SID: Type.String(),
+  REDIS_URL:Type.String(),
   TWILIO_AUTH_TOKEN: Type.String(),
   TWILIO_PHONE_NUMBER: Type.String(),
   RAPIDAPI_SECRET: Type.String(),
@@ -36,6 +40,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
 
   await fastify.register(Env, {
       schema: Envs
+  })
+
+  await fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'public'),
   })
 
   await fastify.register(Sensible)

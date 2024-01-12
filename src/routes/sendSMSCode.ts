@@ -48,7 +48,7 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {phoneNumber, verifyCode, appName} = request.body
-      const content = fastify.sms.getContent(verifyCode, appName)
+      const content = fastify.contentManager.getSMSCodeContent(verifyCode, appName)
       await fastify.sms.send(phoneNumber, content)
 
 

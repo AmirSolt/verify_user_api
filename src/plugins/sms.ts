@@ -1,7 +1,6 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
 import TwilioSDK from 'twilio';
-import { isURL } from '../lib/helper';
 
 
 
@@ -9,7 +8,6 @@ import { isURL } from '../lib/helper';
 declare module 'fastify' {
   export interface FastifyInstance {
     sms : {
-      getContent: (verifyCode:string, appName:string)=>string
       send: (phoneNumber:string, content:string)=>Promise<void>
     }
   }
@@ -20,20 +18,9 @@ const sms:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
     const client = new TwilioSDK.Twilio(fastify.config.TWILIO_ACCOUNT_SID, fastify.config.TWILIO_AUTH_TOKEN);
 
     fastify.decorate("sms", {
-        getContent,
         send
     })
 
-
-    function getContent(verifyCode:string, appName:string):string{
-        if(isURL(verifyCode)){
-            throw fastify.httpErrors.badRequest(`verifyCode is invalid. verifyCode:${verifyCode}`)
-        }
-        if(appName && isURL(appName)){
-          throw fastify.httpErrors.badRequest(`appName is invalid. appName:${appName}`)
-        }
-        return `${appName}: ${verifyCode} is your security code. Do not share it with anyone.`
-    }
 
     
     async function send(phoneNumber:string, content:string){
@@ -54,9 +41,6 @@ const sms:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
           }
         } 
     }
-
-
-
 }
 
 export default fp(sms, {

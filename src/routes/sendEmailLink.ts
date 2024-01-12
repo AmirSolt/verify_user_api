@@ -10,9 +10,6 @@ const Body = Type.Object({
     toEmail: Type.String({
         maxLength:60,
     }),
-    verifyCode: Type.String({
-      maxLength:12
-    }),
     appName: Type.String({
       maxLength:60
     }),
@@ -33,7 +30,7 @@ interface IReply {
 const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
   fastify.post<{ Headers:HeadersType, Body:BodyType, Reply:IReply }>(
-    '/send-email-code',
+    '/send-email-link',
     {
       schema: {
         headers: Headers,
@@ -47,9 +44,10 @@ const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.rapidapi.verifySecret(rapidapiHeader)
 
 
-      const {toEmail, verifyCode, appName} = request.body
-      const content = fastify.email.getContent(verifyCode, appName)
-      await fastify.email.send(toEmail, "User", `${appName} - verification service`, `${appName} Account Verification Code`, content)
+      const {toEmail, appName} = request.body
+      const verifToken = await fastify.verificationManager.saveVerificationToken(null, toEmail)
+      const content = fastify.contentManager.getEmailLinkContent(verifToken.verifLink, appName)
+      await fastify.email.send(toEmail, "User", `${appName} - verification service`, `${appName} Account Verification Link`, content)
 
 
       reply.status(200).send({ success:true });
