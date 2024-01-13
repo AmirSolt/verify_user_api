@@ -73,7 +73,7 @@ const emailHTMLTemplate = (verify_code:string|null, verify_link:string|null, app
    </a>
    </td>`
 
-   let verifyHTML = verifyCodeHTML? verifyCodeHTML : verifyLinkHTML
+   let verifyHTML = verify_code? verifyCodeHTML : verifyLinkHTML
 
 
    return `
