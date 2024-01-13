@@ -28,7 +28,7 @@ const email:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
           },
           body: JSON.stringify({
             apiKey:fastify.config.EMAIL_CF_WORKER_API_KEY,
-            to_email:to_email,
+            toEmail:to_email,
             toName:toName,
             fromName:fromName,
             subject:subject,

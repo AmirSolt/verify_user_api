@@ -4,9 +4,9 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "to_phone_number": "6475807443",
-    "verify_code": "756341",
-    "app_name": "Peeqq"
+    "phoneNumber": "6475807443",
+    "verifyCode": "756341",
+    "appName": "Peeqq"
 }
 
 
@@ -18,21 +18,23 @@ x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "to_email": "killop1997@gmail.com",
-    "verify_code": "756341",
-    "app_name": "Peeqq"
+    "toEmail": "killop1997@gmail.com",
+    "verifyCode": "756341",
+    "appName": "Peeqq"
 }
 
 ###
 
-POST https://smsverifsender-production.up.railway.app/ HTTP/1.1
+POST https://verifyuserapi-production.up.railway.app/send-email-link HTTP/1.1
 x-rapidapi-proxy-secret:asd
 content-type: application/json
 
 {
-    "to_phone_number": "+16473",
-    "verify_code": "756341",
-    "app_name": "SMS Sender"
+    "to_email": "killop1997@gmail.com",
+    "app_name": "SMS Sender",
+    "webhook_url": "https://google.com",
+    "webhook_secret_key": "asd"
+
 }
 
 
@@ -43,7 +45,7 @@ content-type: application/json
 
 {
 "apiKey":"c92ec923-6fc3-4f30-a546-c0aead27068c",
-"to_email":"killop1997@gmail.com",
+"toEmail":"killop1997@gmail.com",
 "toName":"User",
 "fromName":"App Name",
 "subject":"Greate subject dude!",
