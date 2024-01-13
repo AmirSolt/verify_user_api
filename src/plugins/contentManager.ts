@@ -67,11 +67,14 @@ const emailHTMLTemplate = (verify_code:string|null, verify_link:string|null, app
    
    const verifyCodeHTML = `<td style="padding:30px;font-size:50px;letter-spacing:0.3em;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525;text-align:center">${verify_code}</td>`
    
-   const verifyLinkHTML = `<td class=”button” bgcolor="#50C878">
-   <a  class=”link” href="${verify_link}" target="_blank">
-       Verify Email
+   const verifyLinkHTML = `
+   <td style="padding:30px;font-size:50px;letter-spacing:0.3em;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525;text-align:center">
+ 
+   <a href="${verify_link}" target="_blank" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;">
+      Verify Email
    </a>
-   </td>`
+   </td>
+   `
 
    let verifyHTML = verify_code? verifyCodeHTML : verifyLinkHTML
 
