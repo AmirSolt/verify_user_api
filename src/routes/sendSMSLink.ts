@@ -13,8 +13,8 @@ const Body = Type.Object({
     app_name: Type.String({
       maxLength:60
     }),
-    webhook_url: Type.String(),
-    webhook_secret_key: Type.String(),
+    webhook_url: Type.Optional(Type.String()),
+    webhook_secret_key: Type.Optional(Type.String()),
     success_redirect_url: Type.Optional(Type.String())
 })
 
@@ -48,7 +48,7 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {to_phone_number, app_name, webhook_url, webhook_secret_key, success_redirect_url} = request.body
-      const verifToken = await fastify.verificationManager.saveVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, success_redirect_url??null)
+      const verifToken = await fastify.verificationManager.saveVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, success_redirect_url)
       const content = fastify.contentManager.getSMSLinkContent(verifToken.verifLink, app_name)
       await fastify.sms.send(to_phone_number, content)
 

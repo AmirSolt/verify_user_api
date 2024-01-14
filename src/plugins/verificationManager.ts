@@ -7,16 +7,16 @@ interface VerificationToken{
     to_phone_number:string|null
     email:string|null
     verifLink:string
-    webhook_url: string
-    webhook_secret_key: string
-    success_redirect_url: string|null
+    webhook_url: string|undefined
+    webhook_secret_key: string|undefined
+    success_redirect_url: string|undefined
 }
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
         verificationManager : {
-            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string, webhook_secret_key:string, success_redirect_url:string|null)=>Promise<VerificationToken>
+            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, success_redirect_url:string|undefined)=>Promise<VerificationToken>
             fetchVerificationToken: (id:string)=>Promise<VerificationToken|null>
       }
     }
@@ -31,7 +31,11 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
     })
 
 
-    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string, webhook_secret_key:string, success_redirect_url:string|null){
+    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, success_redirect_url:string|undefined){
+      if(webhook_url==null && success_redirect_url==null){
+        throw fastify.httpErrors.unprocessableEntity("Either webhook_url or success_redirect_url must exist.")
+      }
+      
       const randomId = randomUUID()
       const verificationToken:VerificationToken = {
           id:randomId,
