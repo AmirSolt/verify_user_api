@@ -9,14 +9,14 @@ interface VerificationToken{
     verifLink:string
     webhook_url: string|undefined
     webhook_secret_key: string|undefined
-    success_redirect_url: string|undefined
+    redirect_url: string|undefined
 }
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
         verificationManager : {
-            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, success_redirect_url:string|undefined)=>Promise<VerificationToken>
+            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined)=>Promise<VerificationToken>
             fetchVerificationToken: (id:string)=>Promise<VerificationToken|null>
       }
     }
@@ -31,9 +31,9 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
     })
 
 
-    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, success_redirect_url:string|undefined){
-      if(webhook_url==null && success_redirect_url==null){
-        throw fastify.httpErrors.unprocessableEntity("Either webhook_url or success_redirect_url must exist.")
+    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined){
+      if(webhook_url==null && redirect_url==null){
+        throw fastify.httpErrors.unprocessableEntity("Either webhook_url or redirect_url must exist.")
       }
       
       const randomId = randomUUID()
@@ -43,7 +43,7 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
           email:email,
           webhook_url:webhook_url,
           webhook_secret_key:webhook_secret_key,
-          success_redirect_url:success_redirect_url,
+          redirect_url:redirect_url,
           verifLink:`${fastify.config.DOMAIN}/verifyLink/${encodeURIComponent(randomId)}`,
       }
       await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken)) 

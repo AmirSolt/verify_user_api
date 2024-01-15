@@ -46,8 +46,8 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         })
       }
     
-    if(verificationToken.success_redirect_url){
-      return reply.redirect(verificationToken.success_redirect_url)
+    if(verificationToken.redirect_url){
+      return reply.redirect(verificationToken.redirect_url)
     }
 
 
