@@ -44,7 +44,7 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
           webhook_url:webhook_url,
           webhook_secret_key:webhook_secret_key,
           success_redirect_url:success_redirect_url,
-          verifLink:`${fastify.config.DOMAIN}/verifyLink/${randomId}`,
+          verifLink:`${fastify.config.DOMAIN}/verifyLink/${encodeURIComponent(randomId)}`,
       }
       await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken)) 
       return verificationToken
