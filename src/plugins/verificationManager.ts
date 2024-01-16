@@ -10,13 +10,14 @@ interface VerificationToken{
     webhook_url: string|undefined
     webhook_secret_key: string|undefined
     redirect_url: string|undefined
+    extra_json:any|undefined
 }
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
         verificationManager : {
-            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined)=>Promise<VerificationToken>
+            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, extra_json:any|undefined)=>Promise<VerificationToken>
             fetchVerificationToken: (id:string)=>Promise<VerificationToken|null>
       }
     }
@@ -31,7 +32,7 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
     })
 
 
-    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined){
+    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, extra_json:any|undefined){
       if(webhook_url==null && redirect_url==null){
         throw fastify.httpErrors.unprocessableEntity("Either webhook_url or redirect_url must exist.")
       }
@@ -45,8 +46,9 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
           webhook_secret_key:webhook_secret_key,
           redirect_url:redirect_url,
           verifLink:`${fastify.config.DOMAIN}/verifyLink/${encodeURIComponent(randomId)}`,
+          extra_json,
       }
-      await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken)) 
+      await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken), "EX", 60*15) 
       return verificationToken
     }
 

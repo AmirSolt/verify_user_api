@@ -15,7 +15,8 @@ const Body = Type.Object({
     }),
     webhook_url: Type.Optional(Type.String()),
     webhook_secret_key: Type.Optional(Type.String()),
-    redirect_url: Type.Optional(Type.String())
+    redirect_url: Type.Optional(Type.String()),
+    extra_json:Type.Optional(Type.Any())
 })
 
 type HeadersType = Static<typeof Headers>
@@ -47,8 +48,8 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.rapidapi.verifySecret(rapidapiHeader)
 
 
-      const {to_phone_number, app_name, webhook_url, webhook_secret_key, redirect_url} = request.body
-      const verifToken = await fastify.verificationManager.saveVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, redirect_url)
+      const {to_phone_number, app_name, webhook_url, webhook_secret_key, redirect_url, extra_json} = request.body
+      const verifToken = await fastify.verificationManager.saveVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, redirect_url, extra_json)
       const content = fastify.contentManager.getSMSLinkContent(verifToken.verifLink, app_name)
       await fastify.sms.send(to_phone_number, content)
 

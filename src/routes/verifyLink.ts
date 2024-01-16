@@ -41,7 +41,8 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
               id:verificationToken.id,
               user_email:verificationToken.email,
               user_phone_number:verificationToken.to_phone_number,
-              webhook_secret_key:verificationToken.webhook_secret_key
+              webhook_secret_key:verificationToken.webhook_secret_key,
+              extra_json:verificationToken.extra_json
             })
         })
       }
