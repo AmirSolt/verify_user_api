@@ -1,53 +1,16 @@
 
-POST http://127.0.0.1:3000/send-sms-code HTTP/1.1
-x-rapidapi-proxy-secret:asd
-content-type: application/json
-
-{
-    "phoneNumber": "6475807443",
-    "verifyCode": "756341",
-    "appName": "Peeqq"
-}
-
-
-###
-
-
-POST http://127.0.0.1:3000/send-email-code HTTP/1.1
-x-rapidapi-proxy-secret:asd
-content-type: application/json
-
-{
-    "toEmail": "killop1997@gmail.com",
-    "verifyCode": "756341",
-    "appName": "Peeqq"
-}
-
-###
 
 POST https://verifyuserapi-production.up.railway.app/send-email-link HTTP/1.1
-x-rapidapi-proxy-secret:asd
+x-rapidapi-proxy-secret:0acb8a10-b3c3-11ee-b5b8-137661e541b5
 content-type: application/json
 
 {
     "to_email": "killop1997@gmail.com",
     "app_name": "SMS Sender",
-    "webhook_url": "https://google.com",
-    "webhook_secret_key": "asd"
-
+    "webhook_url": "https://webhook.site/6c179183-9e56-48e2-8373-5401be6cafd7",
+    "webhook_secret_key": "asdasdasd",
+    "webhook_extra_json":{
+        "success":true   
+    }
 }
 
-
-###
-
-POST https://email-sender.killop1997.workers.dev/ HTTP/1.1
-content-type: application/json
-
-{
-"apiKey":"c92ec923-6fc3-4f30-a546-c0aead27068c",
-"toEmail":"killop1997@gmail.com",
-"toName":"User",
-"fromName":"App Name",
-"subject":"Greate subject dude!",
-"contentHTML":"This is the link I told you about https://super-apis.com"
-}

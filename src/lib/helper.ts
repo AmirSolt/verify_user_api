@@ -1,8 +1,7 @@
-export function isURL(url:string){
-    try {
-      new URL(url);
-    } catch (_) {
-      return false;  
-    }
-    return true
-  }
+
+
+
+export function containsSpecialChars(text:string){
+  const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  return format.test(text)
+}

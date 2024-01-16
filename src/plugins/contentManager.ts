@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
-import { isURL } from '../lib/helper';
+import { containsSpecialChars } from '../lib/helper';
 
 
 
@@ -27,33 +27,33 @@ const contentManager:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, 
 
 
     function getEmailCodeContent(verify_code:string, app_name:string):string{
-        if(isURL(verify_code)){
+        if(containsSpecialChars(verify_code)){
             throw fastify.httpErrors.badRequest(`verify_code is invalid. verify_code:${verify_code}`)
         }
-        if(app_name && isURL(app_name)){
+        if(app_name && containsSpecialChars(app_name)){
           throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
         }
         return emailHTMLTemplate(verify_code, null, app_name)
     }
 
     function getSMSCodeContent(verify_code:string, app_name:string):string{
-        if(isURL(verify_code)){
+        if(containsSpecialChars(verify_code)){
             throw fastify.httpErrors.badRequest(`verify_code is invalid. verify_code:${verify_code}`)
         }
-        if(app_name && isURL(app_name)){
+        if(app_name && containsSpecialChars(app_name)){
           throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
         }
         return `${app_name}: ${verify_code} is your security code. Do not share it with anyone.`
    }
    
    function getSMSLinkContent(verifLink:string, app_name:string):string{
-      if(app_name && isURL(app_name)){
+      if(app_name && containsSpecialChars(app_name)){
          throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
        }
        return `${app_name}: To verify your phone number click the link below. If you were not expecting this verification, please ignore.\n ${verifLink}`
    }
    function getEmailLinkContent(verifLink:string, app_name:string):string{
-      if(app_name && isURL(app_name)){
+      if(app_name && containsSpecialChars(app_name)){
          throw fastify.httpErrors.badRequest(`app_name is invalid. app_name:${app_name}`)
        }
       return emailHTMLTemplate(null, verifLink, app_name)
