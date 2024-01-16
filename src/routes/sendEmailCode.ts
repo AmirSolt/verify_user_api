@@ -6,7 +6,7 @@ const Headers = Type.Object({
   'x-rapidapi-proxy-secret': Type.String()
 })
 
-const Body = Type.Object({
+const Params = Type.Object({
     to_email: Type.String({
         maxLength:60,
     }),
@@ -19,7 +19,7 @@ const Body = Type.Object({
 })
 
 type HeadersType = Static<typeof Headers>
-type BodyType = Static<typeof Body>
+type ParamsType = Static<typeof Params>
 
 
 interface IReply {
@@ -32,12 +32,12 @@ interface IReply {
 
 const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
-  fastify.post<{ Headers:HeadersType, Body:BodyType, Reply:IReply }>(
+  fastify.post<{ Headers:HeadersType, Params:ParamsType, Reply:IReply }>(
     '/send-email-code',
     {
       schema: {
         headers: Headers,
-        body: Body,
+        params: Params,
       },
     },
     async  (request, reply) => {
@@ -47,7 +47,7 @@ const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.rapidapi.verifySecret(rapidapiHeader)
 
 
-      const {to_email, verify_code, app_name} = request.body
+      const {to_email, verify_code, app_name} = request.params
       const content = fastify.contentManager.getEmailCodeContent(verify_code, app_name)
       await fastify.email.send(to_email, "User", `${app_name} - verification service`, `${app_name} Account Verification Code`, content)
 
