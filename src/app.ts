@@ -5,7 +5,6 @@ import Sensible from '@fastify/sensible'
 import Env from '@fastify/env'
 import fastifyStatic from '@fastify/static'
 import Cors from '@fastify/cors'
-import path from 'path';
 import { Static, Type } from '@sinclair/typebox'
 
 
