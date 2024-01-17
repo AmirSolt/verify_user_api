@@ -41,9 +41,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
   await fastify.register(Env, {
       schema: Envs
   })
-
   await fastify.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'),
+    root: join(__dirname, '..', 'public'),
+    prefix: '/public/',
+    constraints: { host: fastify.config.DOMAIN }
   })
 
   await fastify.register(Sensible)
