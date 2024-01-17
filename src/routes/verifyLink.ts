@@ -27,7 +27,7 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const verificationToken = await fastify.verificationManager.fetchVerificationToken(verificationId)
 
       if(verificationToken==null){
-        return reply.sendFile("fail.html")
+        return reply.sendFile("verifyLink/fail.html")
       }
 
       if(verificationToken.webhook_url){
@@ -52,7 +52,7 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     }
 
 
-    return reply.sendFile("success.html")
+    return reply.sendFile("verifyLink/success.html")
 
     }
   )
