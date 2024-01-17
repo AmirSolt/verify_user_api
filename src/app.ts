@@ -52,6 +52,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
     origin: false
   })
 
+
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'plugins'),
     options: opts

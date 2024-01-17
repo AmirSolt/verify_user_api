@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { Static, Type } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 
 
 const Headers = Type.Object({
@@ -18,26 +19,38 @@ const Body = Type.Object({
     }),
 })
 
+const Reply = Type.Object({
+  200: Type.Object({
+    success:Type.Boolean()
+  }),
+  302: Type.Object({
+    url:Type.String()
+  }),
+  '4xx': Type.Object({
+    error:Type.String()
+  }),
+  '5xx': Type.Object({
+    error:Type.String()
+  }),
+})
+
 type HeadersType = Static<typeof Headers>
 type BodyType = Static<typeof Body>
-
-
-interface IReply {
-  200: {success:boolean};
-  302: { url: string };
-  '4xx': { error: string };
-  '5xx': { error: string };
-}
+type ReplyType = Static<typeof Reply>
+const ReplyValue = Value.Create(Reply)
 
 
 const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
-  fastify.post<{ Headers:HeadersType, Body:BodyType, Reply:IReply }>(
+  fastify.post<{ Headers:HeadersType, Body:BodyType, Reply:ReplyType }>(
     '/send-sms-code',
     {
       schema: {
         headers: Headers,
         body: Body,
+        response:{
+          200:ReplyValue[200],
+        }
       },
     },
     async  (request, reply) => {
