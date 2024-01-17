@@ -93,7 +93,7 @@ const emailHTMLTemplate = (verify_code:string|null, verify_link:string|null, app
                      <td style="padding:20px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;color:#252525">Hi,</td>
                   </tr>
                   <tr>
-                     <td style="padding:30px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;line-height:19px;color:#252525;text-align:center">Your <b>${app_name}</b> email verification: </td>
+                     <td style="padding:30px;font-size:16px;font-family:Avenir,Helvetica,Arial,sans-serif;line-height:19px;color:#2d80c4;text-align:center">Your <b>${app_name}</b> email verification: </td>
                   </tr>
                   <tr>
                     ${verifyHTML}
