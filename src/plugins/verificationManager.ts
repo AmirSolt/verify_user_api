@@ -57,7 +57,7 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
     }
 
     async function getVerificationToken(id:string){
-      const res = await fastify.redis.get(id)
+      const res = await fastify.redis.get(formatVerificationTokenId(id))
       if(res==null){
           return null
       }
