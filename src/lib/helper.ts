@@ -2,6 +2,6 @@
 
 
 export function containsSpecialChars(text:string){
-  const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-  return format.test(text)
+  const regex = /^[A-Za-z0-9\s]*$/; 
+  return regex.test(text)
 }

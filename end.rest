@@ -5,9 +5,9 @@ x-rapidapi-proxy-secret:0acb8a10-b3c3-11ee-b5b8-137661e541b5
 content-type: application/json
 
 {
-    "to_email": "killop1997@gmail.com",
+    "to_email": "7e297984-c5c4-4fc6-a820-d3e417d92150@email.webhook.site",
     "app_name": "SMS Sender",
-    "webhook_url": "https://webhook.site/6c179183-9e56-48e2-8373-5401be6cafd7",
+    "webhook_url": "https://webhook.site/7e297984-c5c4-4fc6-a820-d3e417d92150",
     "webhook_secret_key": "asdasdasd",
     "webhook_extra_json":{
         "success":true   
