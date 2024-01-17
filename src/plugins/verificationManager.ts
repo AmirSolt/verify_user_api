@@ -11,14 +11,16 @@ interface VerificationToken{
     webhook_secret_key: string|undefined
     redirect_url: string|undefined
     webhook_extra_json:any|undefined
+    is_read:boolean
 }
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
         verificationManager : {
-            saveVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, webhook_extra_json:any|undefined)=>Promise<VerificationToken>
-            fetchVerificationToken: (id:string)=>Promise<VerificationToken|null>
+            createVerificationToken: (to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, webhook_extra_json:any|undefined)=>Promise<VerificationToken>
+            getVerificationToken: (id:string)=>Promise<VerificationToken|null>
+            updateReadVerificationToken: (verificationToken: VerificationToken)=>Promise<void>
       }
     }
   }
@@ -27,12 +29,13 @@ declare module 'fastify' {
 const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, opts)=>{
 
     fastify.decorate("verificationManager", {
-        saveVerificationToken,
-        fetchVerificationToken
+        createVerificationToken,
+        getVerificationToken,
+        updateReadVerificationToken
     })
 
 
-    async function saveVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, webhook_extra_json:any|undefined){
+    async function createVerificationToken(to_phone_number:string|null, email:string|null, webhook_url:string|undefined, webhook_secret_key:string|undefined, redirect_url:string|undefined, webhook_extra_json:any|undefined){
       if(webhook_url==null && redirect_url==null){
         throw fastify.httpErrors.unprocessableEntity("Either webhook_url or redirect_url must exist.")
       }
@@ -47,17 +50,27 @@ const verificationManager:FastifyPluginAsync<FastifyPluginOptions> = async (fast
           redirect_url:redirect_url,
           verifLink:`${fastify.config.DOMAIN}/verifyLink/${encodeURIComponent(randomId)}`,
           webhook_extra_json,
+          is_read:false
       }
-      await fastify.redis.set(verificationToken.id, JSON.stringify(verificationToken), "EX", 60*15) 
+      await fastify.redis.set(formatVerificationTokenId(verificationToken.id), JSON.stringify(verificationToken), "EX", 60*15) 
       return verificationToken
     }
 
-    async function fetchVerificationToken(id:string){
+    async function getVerificationToken(id:string){
       const res = await fastify.redis.get(id)
       if(res==null){
           return null
       }
       return JSON.parse(res)
+    }
+
+    async function updateReadVerificationToken(verificationToken: VerificationToken){
+      verificationToken.is_read = true
+      await fastify.redis.set(formatVerificationTokenId(verificationToken.id), JSON.stringify(verificationToken), "EX", 60*2) 
+    }
+
+    function formatVerificationTokenId(id: string){
+      return `VT:${id}`
     }
 }
 

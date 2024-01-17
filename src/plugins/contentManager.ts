@@ -28,33 +28,33 @@ const contentManager:FastifyPluginAsync<FastifyPluginOptions> = async (fastify, 
 
     function getEmailCodeContent(verify_code:string, app_name:string):string{
         if(containsSpecialChars(verify_code)){
-            throw fastify.httpErrors.badRequest(`verify_code cannot contain special charachters. verify_code:${verify_code}`)
+            throw fastify.httpErrors.badRequest(`verify_code cannot contain special characters. verify_code:${verify_code}`)
         }
         if(app_name && containsSpecialChars(app_name)){
-          throw fastify.httpErrors.badRequest(`app_name cannot contain special charachters. app_name:${app_name}`)
+          throw fastify.httpErrors.badRequest(`app_name cannot contain special characters. app_name:${app_name}`)
         }
         return emailHTMLTemplate(verify_code, null, app_name)
     }
 
     function getSMSCodeContent(verify_code:string, app_name:string):string{
         if(containsSpecialChars(verify_code)){
-            throw fastify.httpErrors.badRequest(`verify_code cannot contain special charachters. verify_code:${verify_code}`)
+            throw fastify.httpErrors.badRequest(`verify_code cannot contain special characters. verify_code:${verify_code}`)
         }
         if(app_name && containsSpecialChars(app_name)){
-          throw fastify.httpErrors.badRequest(`app_name cannot contain special charachters. app_name:${app_name}`)
+          throw fastify.httpErrors.badRequest(`app_name cannot contain special characters. app_name:${app_name}`)
         }
         return `${app_name}: ${verify_code} is your security code. Do not share it with anyone.`
    }
    
    function getSMSLinkContent(verifLink:string, app_name:string):string{
       if(app_name && containsSpecialChars(app_name)){
-         throw fastify.httpErrors.badRequest(`app_name cannot contain special charachters. app_name:${app_name}`)
+         throw fastify.httpErrors.badRequest(`app_name cannot contain special characters. app_name:${app_name}`)
        }
        return `${app_name}: To verify your phone number click the link below. If you were not expecting this verification, please ignore.\n ${verifLink}`
    }
    function getEmailLinkContent(verifLink:string, app_name:string):string{
       if(app_name && containsSpecialChars(app_name)){
-         throw fastify.httpErrors.badRequest(`app_name cannot contain special charachters. app_name:${app_name}`)
+         throw fastify.httpErrors.badRequest(`app_name cannot contain special characters. app_name:${app_name}`)
        }
       return emailHTMLTemplate(null, verifLink, app_name)
 

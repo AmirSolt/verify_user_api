@@ -61,7 +61,7 @@ const sendEmail: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {to_email, app_name, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json} = request.body
-      const verifToken = await fastify.verificationManager.saveVerificationToken(null, to_email, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json)
+      const verifToken = await fastify.verificationManager.createVerificationToken(null, to_email, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json)
       const content = fastify.contentManager.getEmailLinkContent(verifToken.verifLink, app_name)
       await fastify.email.send(to_email, "User", `${app_name} - verification service`, `${app_name} Account Verification Link`, content)
 

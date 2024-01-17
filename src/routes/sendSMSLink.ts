@@ -62,7 +62,7 @@ const sendSMS: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 
       const {to_phone_number, app_name, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json} = request.body
-      const verifToken = await fastify.verificationManager.saveVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json)
+      const verifToken = await fastify.verificationManager.createVerificationToken(to_phone_number, null, webhook_url, webhook_secret_key, redirect_url, webhook_extra_json)
       const content = fastify.contentManager.getSMSLinkContent(verifToken.verifLink, app_name)
       await fastify.sms.send(to_phone_number, content)
 
