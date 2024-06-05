@@ -1,14 +1,1 @@
 
-
-POST https://verifyuserapi-production.up.railway.app/send-email-link HTTP/1.1
-x-rapidapi-proxy-secret:0acb8a10-b3c3-11ee-b5b8-137661e541b5
-content-type: application/json
-
-{
-    "to_email": "killop1997@gmail.com",
-    "app_name": "SMS Sender",
-    "redirect_url":"https://google.com",
-    "webhook_url":"https://webhook.site/7e297984-c5c4-4fc6-a820-d3e417d92150"
-}
-
-###
